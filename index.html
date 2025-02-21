@@ -1,181 +1,443 @@
-<div class="branches-container">
-    <!-- Contextualização -->
-    <div class="branch">
-        <div class="branch-header contextualizacao">Contextualização</div>
-        <div class="branch-content">
-            <div class="subnodes">
-                <div class="subnode">Missão e Valores
-                    <div class="items">
-                        <div class="item">Desenvolvimento de Lideranças Públicas</div>
-                        <div class="item">Transformação do Estado Brasileiro</div>
-                        <div class="item">Inovação em Gestão Pública</div>
-                        <div class="item">Excelência em Capacitação</div>
-                        <div class="item">Compromisso com Resultados</div>
-                        <div class="item">Ética e Transparência</div>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Mental - Plano de Comunicação LideraGov</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary: #fd8127;
+            --primary-light: #ff9f57;
+            --primary-dark: #e66d1f;
+            --secondary: #4a4a4a;
+            --secondary-light: #686868;
+            --secondary-dark: #363636;
+            --background: #ffffff;
+            --surface: #f8f9fa;
+            --text: #2d2d2d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .mindmap-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .center-topic {
+            background: white;
+            color: var(--text);
+            padding: 1.75rem 2rem;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 30px rgba(253, 129, 39, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(253, 129, 39, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .center-topic::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        }
+
+        .center-topic h1 {
+            font-weight: 700;
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .center-topic p {
+            color: var(--secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .branches-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .branch {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .branch:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .branch-header {
+            padding: 0.875rem 1.25rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            color: var(--text);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .branch-header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .contextualizacao::before { background: var(--primary); }
+        .estrategias::before { background: var(--primary-dark); }
+        .implementacao::before { background: var(--secondary); }
+        .monitoramento::before { background: var(--secondary-light); }
+        .recursos::before { background: var(--secondary-dark); }
+
+        .branch-header::after {
+            content: '›';
+            font-size: 1.25rem;
+            transition: transform 0.3s ease;
+            color: var(--primary);
+        }
+
+        .branch-header.active::after {
+            transform: rotate(90deg);
+        }
+
+        .branch-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: var(--surface);
+        }
+
+        .branch-content.active {
+            max-height: 2000px;
+        }
+
+        .subnodes {
+            padding: 1.5rem;
+        }
+
+        .subnode {
+            background: white;
+            padding: 0.75rem 1.25rem;
+            margin: 0.6rem 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            position: relative;
+            padding-left: 1.75rem;
+            font-size: 0.9rem;
+        }
+
+        .subnode::before {
+            content: '+';
+            position: absolute;
+            left: 0.75rem;
+            color: var(--primary);
+            font-weight: 500;
+            transition: transform 0.3s ease;
+        }
+
+        .subnode:has(.items.active)::before {
+            transform: rotate(45deg);
+        }
+
+        .items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .items.active {
+            max-height: 1000px;
+            margin-top: 0.8rem;
+        }
+
+        .item {
+            padding: 0.625rem 1rem;
+            margin: 0.4rem 0;
+            background: var(--surface);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--secondary);
+            border-left: 2px solid var(--primary-light);
+            transition: all 0.2s ease;
+        }
+
+        .item:hover {
+            background: white;
+            transform: translateX(3px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .mindmap-container {
+                padding: 1rem;
+            }
+
+            .center-topic {
+                padding: 1.5rem;
+            }
+
+            .center-topic h1 {
+                font-size: 1.5rem;
+            }
+
+            .branches-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mindmap-container">
+        <div class="center-topic">
+            <h1>Plano de Comunicação LideraGov</h1>
+            <p>Mapa Mental Estratégico</p>
+        </div>
+
+        <div class="branches-container">
+            <!-- Contextualização -->
+            <div class="branch">
+                <div class="branch-header contextualizacao">Contextualização</div>
+                <div class="branch-content">
+                    <div class="subnodes">
+                        <div class="subnode">Missão e Valores
+                            <div class="items">
+                                <div class="item">Desenvolvimento de Lideranças Públicas</div>
+                                <div class="item">Transformação do Estado Brasileiro</div>
+                                <div class="item">Inovação em Gestão Pública</div>
+                                <div class="item">Excelência em Capacitação</div>
+                                <div class="item">Compromisso com Resultados</div>
+                                <div class="item">Ética e Transparência</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Público-alvo
+                            <div class="items">
+                                <div class="item">Servidores Federais em Posição de Liderança</div>
+                                <div class="item">Gestores Públicos de Médio e Alto Escalão</div>
+                                <div class="item">Rede de Egressos dos Programas</div>
+                                <div class="item">Pesquisadores e Acadêmicos</div>
+                                <div class="item">Potenciais Participantes</div>
+                                <div class="item">Stakeholders Institucionais</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Análise de Cenário
+                            <div class="items">
+                                <div class="item">Demandas do Setor Público</div>
+                                <div class="item">Tendências em Capacitação</div>
+                                <div class="item">Benchmark Internacional</div>
+                                <div class="item">Contexto Político-Institucional</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="subnode">Público-alvo
-                    <div class="items">
-                        <div class="item">Servidores Federais em Posição de Liderança</div>
-                        <div class="item">Gestores Públicos de Médio e Alto Escalão</div>
-                        <div class="item">Rede de Egressos dos Programas</div>
-                        <div class="item">Pesquisadores e Acadêmicos</div>
-                        <div class="item">Potenciais Participantes</div>
-                        <div class="item">Stakeholders Institucionais</div>
+            </div>
+
+            <!-- Estratégias -->
+            <div class="branch">
+                <div class="branch-header estrategias">Estratégias e Canais</div>
+                <div class="branch-content">
+                    <div class="subnodes">
+                        <div class="subnode">Canais Digitais
+                            <div class="items">
+                                <div class="item">Portal Institucional Responsivo</div>
+                                <div class="item">LinkedIn (posts diários e artigos)</div>
+                                <div class="item">Instagram (stories e reels)</div>
+                                <div class="item">YouTube (lives e conteúdo educativo)</div>
+                                <div class="item">Newsletter Quinzenal</div>
+                                <div class="item">Workplace Interno</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Conteúdo Estratégico
+                            <div class="items">
+                                <div class="item">Podcast "Liderança no Setor Público"</div>
+                                <div class="item">Série de Vídeos "Cases de Sucesso"</div>
+                                <div class="item">Posts Informativos e Educacionais</div>
+                                <div class="item">Artigos Técnicos e Acadêmicos</div>
+                                <div class="item">Webinars Mensais</div>
+                                <div class="item">E-books e Whitepapers</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Campanhas Específicas
+                            <div class="items">
+                                <div class="item">Processo Seletivo Anual</div>
+                                <div class="item">Eventos e Workshops</div>
+                                <div class="item">Parcerias Institucionais</div>
+                                <div class="item">Datas Comemorativas</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="subnode">Análise de Cenário
-                    <div class="items">
-                        <div class="item">Demandas do Setor Público</div>
-                        <div class="item">Tendências em Capacitação</div>
-                        <div class="item">Benchmark Internacional</div>
-                        <div class="item">Contexto Político-Institucional</div>
+            </div>
+
+            <!-- Implementação -->
+            <div class="branch">
+                <div class="branch-header implementacao">Implementação</div>
+                <div class="branch-content">
+                    <div class="subnodes">
+                        <div class="subnode">Cronograma Detalhado
+                            <div class="items">
+                                <div class="item">Diagnóstico e Planejamento (Abr-Mai)</div>
+                                <div class="item">Desenvolvimento de Material (Jun-Jul)</div>
+                                <div class="item">Validação com Stakeholders (Ago)</div>
+                                <div class="item">Lançamento Gradual (Set)</div>
+                                <div class="item">Avaliação e Ajustes (Out-Dez)</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Governança do Projeto
+                            <div class="items">
+                                <div class="item">GT Comunicação (reuniões semanais)</div>
+                                <div class="item">Comitê Gestor (aprovações mensais)</div>
+                                <div class="item">Fluxo de Aprovação de Conteúdo</div>
+                                <div class="item">Matriz de Responsabilidades</div>
+                                <div class="item">Protocolos de Comunicação</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Processos
+                            <div class="items">
+                                <div class="item">Calendário Editorial</div>
+                                <div class="item">Workflow de Produção</div>
+                                <div class="item">Gestão de Mídias Sociais</div>
+                                <div class="item">Resposta a Crises</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monitoramento -->
+            <div class="branch">
+                <div class="branch-header monitoramento">Monitoramento</div>
+                <div class="branch-content">
+                    <div class="subnodes">
+                        <div class="subnode">Métricas Principais
+                            <div class="items">
+                                <div class="item">KPIs de Engajamento</div>
+                                <div class="item">Analytics de Canais</div>
+                                <div class="item">Pesquisas de Satisfação</div>
+                                <div class="item">NPS dos Programas</div>
+                                <div class="item">Share of Voice</div>
+                                <div class="item">Métricas de Conversão</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Gestão de Riscos
+                            <div class="items">
+                                <div class="item">Matriz de Riscos</div>
+                                <div class="item">Planos de Contingência</div>
+                                <div class="item">Protocolos de Crise</div>
+                                <div class="item">Backup de Dados</div>
+                                <div class="item">Compliance</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Relatórios e Análises
+                            <div class="items">
+                                <div class="item">Dashboards Semanais</div>
+                                <div class="item">Relatórios Mensais</div>
+                                <div class="item">Análise de Tendências</div>
+                                <div class="item">Benchmarking Trimestral</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recursos -->
+            <div class="branch">
+                <div class="branch-header recursos">Recursos</div>
+                <div class="branch-content">
+                    <div class="subnodes">
+                        <div class="subnode">Estrutura Organizacional
+                            <div class="items">
+                                <div class="item">Equipe de Comunicação (4)</div>
+                                <div class="item">Design e Audiovisual (2)</div>
+                                <div class="item">Gestão de Conteúdo (3)</div>
+                                <div class="item">Suporte Técnico (2)</div>
+                                <div class="item">Consultores Externos</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Orçamento Anual
+                            <div class="items">
+                                <div class="item">RH e Capacitação (45%)</div>
+                                <div class="item">Tecnologia e Sistemas (25%)</div>
+                                <div class="item">Produção de Conteúdo (20%)</div>
+                                <div class="item">Marketing Digital (10%)</div>
+                                <div class="item">Reserva Técnica (5%)</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Infraestrutura
+                            <div class="items">
+                                <div class="item">Estúdio Audiovisual</div>
+                                <div class="item">Equipamentos Profissionais</div>
+                                <div class="item">Softwares e Licenças</div>
+                                <div class="item">Plataformas de Gestão</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Estratégias -->
-    <div class="branch">
-        <div class="branch-header estrategias">Estratégias e Canais</div>
-        <div class="branch-content">
-            <div class="subnodes">
-                <div class="subnode">Canais Digitais
-                    <div class="items">
-                        <div class="item">Portal Institucional Responsivo</div>
-                        <div class="item">LinkedIn (posts diários e artigos)</div>
-                        <div class="item">Instagram (stories e reels)</div>
-                        <div class="item">YouTube (lives e conteúdo educativo)</div>
-                        <div class="item">Newsletter Quinzenal</div>
-                        <div class="item">Workplace Interno</div>
-                    </div>
-                </div>
-                <div class="subnode">Conteúdo Estratégico
-                    <div class="items">
-                        <div class="item">Podcast "Liderança no Setor Público"</div>
-                        <div class="item">Série de Vídeos "Cases de Sucesso"</div>
-                        <div class="item">Posts Informativos e Educacionais</div>
-                        <div class="item">Artigos Técnicos e Acadêmicos</div>
-                        <div class="item">Webinars Mensais</div>
-                        <div class="item">E-books e Whitepapers</div>
-                    </div>
-                </div>
-                <div class="subnode">Campanhas Específicas
-                    <div class="items">
-                        <div class="item">Processo Seletivo Anual</div>
-                        <div class="item">Eventos e Workshops</div>
-                        <div class="item">Parcerias Institucionais</div>
-                        <div class="item">Datas Comemorativas</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <script>
+        document.querySelectorAll('.branch-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                header.classList.toggle('active');
+                content.classList.toggle('active');
+            });
+        });
 
-    <!-- Implementação -->
-    <div class="branch">
-        <div class="branch-header implementacao">Implementação</div>
-        <div class="branch-content">
-            <div class="subnodes">
-                <div class="subnode">Cronograma Detalhado
-                    <div class="items">
-                        <div class="item">Diagnóstico e Planejamento (Abr-Mai)</div>
-                        <div class="item">Desenvolvimento de Material (Jun-Jul)</div>
-                        <div class="item">Validação com Stakeholders (Ago)</div>
-                        <div class="item">Lançamento Gradual (Set)</div>
-                        <div class="item">Avaliação e Ajustes (Out-Dez)</div>
-                    </div>
-                </div>
-                <div class="subnode">Governança do Projeto
-                    <div class="items">
-                        <div class="item">GT Comunicação (reuniões semanais)</div>
-                        <div class="item">Comitê Gestor (aprovações mensais)</div>
-                        <div class="item">Fluxo de Aprovação de Conteúdo</div>
-                        <div class="item">Matriz de Responsabilidades</div>
-                        <div class="item">Protocolos de Comunicação</div>
-                    </div>
-                </div>
-                <div class="subnode">Processos
-                    <div class="items">
-                        <div class="item">Calendário Editorial</div>
-                        <div class="item">Workflow de Produção</div>
-                        <div class="item">Gestão de Mídias Sociais</div>
-                        <div class="item">Resposta a Crises</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Monitoramento -->
-    <div class="branch">
-        <div class="branch-header monitoramento">Monitoramento</div>
-        <div class="branch-content">
-            <div class="subnodes">
-                <div class="subnode">Métricas Principais
-                    <div class="items">
-                        <div class="item">KPIs de Engajamento</div>
-                        <div class="item">Analytics de Canais</div>
-                        <div class="item">Pesquisas de Satisfação</div>
-                        <div class="item">NPS dos Programas</div>
-                        <div class="item">Share of Voice</div>
-                        <div class="item">Métricas de Conversão</div>
-                    </div>
-                </div>
-                <div class="subnode">Gestão de Riscos
-                    <div class="items">
-                        <div class="item">Matriz de Riscos</div>
-                        <div class="item">Planos de Contingência</div>
-                        <div class="item">Protocolos de Crise</div>
-                        <div class="item">Backup de Dados</div>
-                        <div class="item">Compliance</div>
-                    </div>
-                </div>
-                <div class="subnode">Relatórios e Análises
-                    <div class="items">
-                        <div class="item">Dashboards Semanais</div>
-                        <div class="item">Relatórios Mensais</div>
-                        <div class="item">Análise de Tendências</div>
-                        <div class="item">Benchmarking Trimestral</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recursos -->
-    <div class="branch">
-        <div class="branch-header recursos">Recursos</div>
-        <div class="branch-content">
-            <div class="subnodes">
-                <div class="subnode">Estrutura Organizacional
-                    <div class="items">
-                        <div class="item">Equipe de Comunicação (4)</div>
-                        <div class="item">Design e Audiovisual (2)</div>
-                        <div class="item">Gestão de Conteúdo (3)</div>
-                        <div class="item">Suporte Técnico (2)</div>
-                        <div class="item">Consultores Externos</div>
-                    </div>
-                </div>
-                <div class="subnode">Orçamento Anual
-                    <div class="items">
-                        <div class="item">RH e Capacitação (45%)</div>
-                        <div class="item">Tecnologia e Sistemas (25%)</div>
-                        <div class="item">Produção de Conteúdo (20%)</div>
-                        <div class="item">Marketing Digital (10%)</div>
-                        <div class="item">Reserva Técnica (5%)</div>
-                    </div>
-                </div>
-                <div class="subnode">Infraestrutura
-                    <div class="items">
-                        <div class="item">Estúdio Audiovisual</div>
-                        <div class="item">Equipamentos Profissionais</div>
-                        <div class="item">Softwares e Licenças</div>
-                        <div class="item">Plataformas de Gestão</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+        document.querySelectorAll('.subnode').forEach(subnode => {
+            subnode.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const items = subnode.querySelector('.items');
+                items.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
