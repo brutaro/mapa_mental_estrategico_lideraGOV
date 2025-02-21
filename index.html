@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Mental - Plano de Comunicação LideraGov</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary: #fd8127;
+            --primary-light: #ff9f57;
+            --primary-dark: #e66d1f;
+            --secondary: #4a4a4a;
+            --secondary-light: #686868;
+            --secondary-dark: #363636;
+            --background: #ffffff;
+            --surface: #f8f9fa;
+            --text: #2d2d2d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .mindmap-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .center-topic {
+            background: white;
+            color: var(--text);
+            padding: 1.75rem 2rem;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 30px rgba(253, 129, 39, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(253, 129, 39, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .center-topic::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        }
+
+        .center-topic h1 {
+            font-weight: 700;
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .center-topic p {
+            color: var(--secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .branches-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .branch {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .branch:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .branch-header {
+            padding: 0.875rem 1.25rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            color: var(--text);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .branch-header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .contextualizacao::before { background: var(--primary); }
+        .estrategias::before { background: var(--primary-dark); }
+        .implementacao::before { background: var(--secondary); }
+        .monitoramento::before { background: var(--secondary-light); }
+        .recursos::before { background: var(--secondary-dark); }
+
+        .branch-header::after {
+            content: '›';
+            font-size: 1.25rem;
+            transition: transform 0.3s ease;
+            color: var(--primary);
+        }
+
+        .branch-header.active::after {
+            transform: rotate(90deg);
+        }
+
+        .branch-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: var(--surface);
+        }
+
+        .branch-content.active {
+            max-height: 1000px;
+        }
+
+        .subnodes {
+            padding: 1.5rem;
+        }
+
+        .subnode {
+            background: white;
+            padding: 0.75rem 1.25rem;
+            margin: 0.6rem 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            position: relative;
+            padding-left: 1.75rem;
+            font-size: 0.9rem;
+        }
+
+        .subnode::before {
+            content: '+';
+            position: absolute;
+            left: 0.75rem;
+            color: var(--primary);
+            font-weight: 500;
+            transition: transform 0.3s ease;
+        }
+
+        .subnode:has(.items.active)::before {
+            transform: rotate(45deg);
+        }
+
+        .items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .items.active {
+            max-height: 500px;
+            margin-top: 0.8rem;
+        }
+
+        .item {
+            padding: 0.625rem 1rem;
+            margin: 0.4rem 0;
+            background: var(--surface);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--secondary);
+            border-left: 2px solid var(--primary-light);
+            transition: all 0.2s ease;
+        }
+
+        .item:hover {
+            background: white;
+            transform: translateX(3px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .mindmap-container {
+                padding: 1rem;
+            }
+
+            .center-topic {
+                padding: 1.5rem;
+            }
+
+            .center-topic h1 {
+                font-size: 1.5rem;
+            }
+
+            .branches-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mindmap-container">
+        <div class="center-topic">
+            <h1>Plano de Comunicação LideraGov</h1>
+            <p>Mapa Mental Estratégico</p>
+        </div>
+
+        <div class="branches-container">
+            <!-- Contextualização -->
+            <div class="branch">
+                <div class="branch-header contextualizacao">Contextualização</div>
+                <div class="branch-content">
+                    <div class="subnodes">
+                        <div class="subnode">Missão e Valores
+                            <div class="items">
+                                <div class="item">Desenvolvimento de Lideranças</div>
+                                <div class="item">Transformação do Estado</div>
+                                <div class="item">Inovação</div>
+                                <div class="item">Excelência</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Público-alvo
+                            <div class="items">
+                                <div class="item">Servidores Federais</div>
+                                <div class="item">Líderes Públicos</div>
+                                <div class="item">Egressos</div>
+                                <div class="item">Comunidade Acadêmica</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estratégias -->
+            <div class="branch">
+                <div class="branch-header estrategias">Estratégias e Canais</div>
+                <div class="branch-content">
+                    <div class="subnodes">
+                        <div class="subnode">Canais Digitais
+                            <div class="items">
+                                <div class="item">Portal Institucional</div>
+                                <div class="item">LinkedIn</div>
+                                <div class="item">Instagram</div>
+                                <div class="item">YouTube</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Conteúdo
+                            <div class="items">
+                                <div class="item">Podcast</div>
+                                <div class="item">Vídeos</div>
+                                <div class="item">Posts</div>
+                                <div class="item">Artigos</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Implementação -->
+            <div class="branch">
+                <div class="branch-header implementacao">Implementação</div>
+                <div class="branch-content">
+                    <div class="subnodes">
+                        <div class="subnode">Cronograma
+                            <div class="items">
+                                <div class="item">Planejamento (Abr-Jul)</div>
+                                <div class="item">Validação (Ago)</div>
+                                <div class="item">Lançamento (Set)</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Governança
+                            <div class="items">
+                                <div class="item">GT Comunicação</div>
+                                <div class="item">Processo Decisório</div>
+                                <div class="item">Fluxo de Trabalho</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monitoramento -->
+            <div class="branch">
+                <div class="branch-header monitoramento">Monitoramento</div>
+                <div class="branch-content">
+                    <div class="subnodes">
+                        <div class="subnode">Métricas
+                            <div class="items">
+                                <div class="item">KPIs</div>
+                                <div class="item">Analytics</div>
+                                <div class="item">Relatórios</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Gestão de Riscos
+                            <div class="items">
+                                <div class="item">Prevenção</div>
+                                <div class="item">Contingência</div>
+                                <div class="item">Protocolos</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recursos -->
+            <div class="branch">
+                <div class="branch-header recursos">Recursos</div>
+                <div class="branch-content">
+                    <div class="subnodes">
+                        <div class="subnode">Estrutura
+                            <div class="items">
+                                <div class="item">Equipe Interna</div>
+                                <div class="item">Suporte Externo</div>
+                                <div class="item">Infraestrutura</div>
+                            </div>
+                        </div>
+                        <div class="subnode">Orçamento
+                            <div class="items">
+                                <div class="item">RH (45%)</div>
+                                <div class="item">Tecnologia (25%)</div>
+                                <div class="item">Conteúdo (20%)</div>
+                                <div class="item">Marketing (10%)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.branch-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                header.classList.toggle('active');
+                content.classList.toggle('active');
+            });
+        });
+
+        document.querySelectorAll('.subnode').forEach(subnode => {
+            subnode.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const items = subnode.querySelector('.items');
+                items.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
